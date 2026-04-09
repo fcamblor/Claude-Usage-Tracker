@@ -349,6 +349,7 @@
 "claudecode.component_weekly_description" = "Uso semanal de tokens com barra e tempo de reinício";
 "claudecode.component_extra_usage" = "Mostrar uso extra";
 "claudecode.component_extra_usage_description" = "Indicador de custo (ex., 9,49 USD)";
+"claudecode.weekly_label" = "Mostrar rótulo \"Weekly:\"";
 "claudecode.requirement_sessionkey" = "• Chave de sessão configurada em Credenciais → aba Claude.ai";
 "claudecode.requirement_restart" = "• Reiniciar Claude CLI após aplicar as alterações";
 "claudecode.error_no_components" = "Por favor, selecione pelo menos um componente para exibir";

@@ -34,6 +34,10 @@ class SharedDataStore {
         static let statuslineShowUsageLabel = "statuslineShowUsageLabel"
         static let statuslineShowResetLabel = "statuslineShowResetLabel"
         static let statuslineShowWeekly = "statuslineShowWeekly"
+        static let statuslineShowWeeklyBar = "statuslineShowWeeklyBar"
+        static let statuslineShowWeeklyPaceMarker = "statuslineShowWeeklyPaceMarker"
+        static let statuslineShowWeeklyResetTime = "statuslineShowWeeklyResetTime"
+        static let statuslineShowWeeklyLabel = "statuslineShowWeeklyLabel"
         static let statuslineShowExtraUsage = "statuslineShowExtraUsage"
         static let statuslineColorMode = "statuslineColorMode"
         static let statuslineSingleColorHex = "statuslineSingleColorHex"
@@ -260,6 +264,50 @@ class SharedDataStore {
             return false
         }
         return defaults.bool(forKey: Keys.statuslineShowWeekly)
+    }
+
+    func saveStatuslineShowWeeklyBar(_ show: Bool) {
+        defaults.set(show, forKey: Keys.statuslineShowWeeklyBar)
+    }
+
+    func loadStatuslineShowWeeklyBar() -> Bool {
+        if defaults.object(forKey: Keys.statuslineShowWeeklyBar) == nil {
+            return true
+        }
+        return defaults.bool(forKey: Keys.statuslineShowWeeklyBar)
+    }
+
+    func saveStatuslineShowWeeklyPaceMarker(_ show: Bool) {
+        defaults.set(show, forKey: Keys.statuslineShowWeeklyPaceMarker)
+    }
+
+    func loadStatuslineShowWeeklyPaceMarker() -> Bool {
+        if defaults.object(forKey: Keys.statuslineShowWeeklyPaceMarker) == nil {
+            return true
+        }
+        return defaults.bool(forKey: Keys.statuslineShowWeeklyPaceMarker)
+    }
+
+    func saveStatuslineShowWeeklyResetTime(_ show: Bool) {
+        defaults.set(show, forKey: Keys.statuslineShowWeeklyResetTime)
+    }
+
+    func loadStatuslineShowWeeklyResetTime() -> Bool {
+        if defaults.object(forKey: Keys.statuslineShowWeeklyResetTime) == nil {
+            return true
+        }
+        return defaults.bool(forKey: Keys.statuslineShowWeeklyResetTime)
+    }
+
+    func saveStatuslineShowWeeklyLabel(_ show: Bool) {
+        defaults.set(show, forKey: Keys.statuslineShowWeeklyLabel)
+    }
+
+    func loadStatuslineShowWeeklyLabel() -> Bool {
+        if defaults.object(forKey: Keys.statuslineShowWeeklyLabel) == nil {
+            return true
+        }
+        return defaults.bool(forKey: Keys.statuslineShowWeeklyLabel)
     }
 
     func saveStatuslineShowExtraUsage(_ show: Bool) {

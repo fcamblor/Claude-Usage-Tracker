@@ -372,6 +372,7 @@
 "claudecode.component_weekly_description" = "Тижневе використання токенів з баром та часом скидання";
 "claudecode.component_extra_usage" = "Показати додаткове використання";
 "claudecode.component_extra_usage_description" = "Індикатор вартості (напр., 9,49 USD)";
+"claudecode.weekly_label" = "Показати мітку \"Weekly:\"";
 "claudecode.requirement_sessionkey" = "• Ключ сесії налаштовано в Облікові дані → вкладка Claude.ai";
 "claudecode.requirement_restart" = "• Перезапустіть Claude CLI після застосування змін";
 "claudecode.error_no_components" = "Будь ласка, виберіть принаймні один компонент для відображення";

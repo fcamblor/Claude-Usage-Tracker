@@ -28,6 +28,10 @@ struct ClaudeCodeView: View {
     @State private var showContextLabel: Bool = SharedDataStore.shared.loadStatuslineShowContextLabel()
     @State private var showResetLabel: Bool = SharedDataStore.shared.loadStatuslineShowResetLabel()
     @State private var showWeekly: Bool = SharedDataStore.shared.loadStatuslineShowWeekly()
+    @State private var showWeeklyBar: Bool = SharedDataStore.shared.loadStatuslineShowWeeklyBar()
+    @State private var showWeeklyPaceMarker: Bool = SharedDataStore.shared.loadStatuslineShowWeeklyPaceMarker()
+    @State private var showWeeklyResetTime: Bool = SharedDataStore.shared.loadStatuslineShowWeeklyResetTime()
+    @State private var showWeeklyLabel: Bool = SharedDataStore.shared.loadStatuslineShowWeeklyLabel()
     @State private var showExtraUsage: Bool = SharedDataStore.shared.loadStatuslineShowExtraUsage()
 
     // Appearance settings
@@ -257,11 +261,43 @@ struct ClaudeCodeView: View {
 
                                     Divider()
 
-                                    SettingToggle(
-                                        title: "claudecode.component_weekly".localized,
-                                        description: "claudecode.component_weekly_description".localized,
-                                        isOn: $showWeekly
-                                    )
+                                    // Weekly with sub-options
+                                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.small) {
+                                        SettingToggle(
+                                            title: "claudecode.component_weekly".localized,
+                                            description: "claudecode.component_weekly_description".localized,
+                                            isOn: $showWeekly
+                                        )
+
+                                        if showWeekly {
+                                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.small) {
+                                                SettingToggle(
+                                                    title: "claudecode.component_progressbar".localized,
+                                                    isOn: $showWeeklyBar
+                                                )
+
+                                                if showWeeklyBar {
+                                                    SettingToggle(
+                                                        title: "claudecode.component_pace_marker".localized,
+                                                        description: "claudecode.pace_marker_info".localized,
+                                                        isOn: $showWeeklyPaceMarker
+                                                    )
+                                                    .padding(.leading, DesignTokens.Spacing.cardPadding)
+                                                }
+
+                                                SettingToggle(
+                                                    title: "claudecode.component_resettime".localized,
+                                                    isOn: $showWeeklyResetTime
+                                                )
+
+                                                SettingToggle(
+                                                    title: "claudecode.weekly_label".localized,
+                                                    isOn: $showWeeklyLabel
+                                                )
+                                            }
+                                            .padding(.leading, DesignTokens.Spacing.cardPadding)
+                                        }
+                                    }
 
                                     SettingToggle(
                                         title: "claudecode.component_extra_usage".localized,
@@ -558,14 +594,14 @@ struct ClaudeCodeView: View {
                 if showDirectory || showBranch || showModel || showProfile || showContext || showUsage {
                     Text(" │ ").foregroundColor(TerminalColors.gray)
                 }
-                let weeklyPrefix = showUsageLabel ? "Weekly: " : ""
+                let weeklyPrefix = showWeeklyLabel ? "Weekly: " : ""
                 Text("\(weeklyPrefix)\(weeklyPct)%")
                     .foregroundColor(weeklyColor)
-                if showProgressBar {
+                if showWeeklyBar {
                     let wFilled = max(0, min(10, (weeklyPct + 5) / 10))
                     let wEmpty = 10 - wFilled
                     let wBar = String(repeating: "▓", count: wFilled) + String(repeating: "░", count: wEmpty)
-                    if showPaceMarker {
+                    if showWeeklyPaceMarker {
                         let wMarkerPos = max(0, min(9, previewWeeklyMarkerPosition))
                         let wChars = Array(wBar)
                         Text(" " + String(wChars.prefix(wMarkerPos)))
@@ -578,7 +614,7 @@ struct ClaudeCodeView: View {
                         Text(" \(wBar)").foregroundColor(weeklyColor)
                     }
                 }
-                if showResetTime {
+                if showWeeklyResetTime {
                     let weeklyResetString = formatWeeklyResetTime(usage?.weeklyResetTime)
                     Text(" → \(weeklyResetString)").foregroundColor(weeklyColor)
                 }
@@ -767,6 +803,10 @@ struct ClaudeCodeView: View {
         SharedDataStore.shared.saveStatuslineShowUsageLabel(showUsageLabel)
         SharedDataStore.shared.saveStatuslineShowResetLabel(showResetLabel)
         SharedDataStore.shared.saveStatuslineShowWeekly(showWeekly)
+        SharedDataStore.shared.saveStatuslineShowWeeklyBar(showWeeklyBar)
+        SharedDataStore.shared.saveStatuslineShowWeeklyPaceMarker(showWeeklyPaceMarker)
+        SharedDataStore.shared.saveStatuslineShowWeeklyResetTime(showWeeklyResetTime)
+        SharedDataStore.shared.saveStatuslineShowWeeklyLabel(showWeeklyLabel)
         SharedDataStore.shared.saveStatuslineShowExtraUsage(showExtraUsage)
 
         do {
@@ -792,6 +832,10 @@ struct ClaudeCodeView: View {
                 showProfile: showProfile,
                 profileName: profileName,
                 showWeekly: showWeekly,
+                showWeeklyBar: showWeeklyBar,
+                showWeeklyPaceMarker: showWeeklyPaceMarker,
+                showWeeklyResetTime: showWeeklyResetTime,
+                showWeeklyLabel: showWeeklyLabel,
                 showExtraUsage: showExtraUsage
             )
 
@@ -886,20 +930,20 @@ struct ClaudeCodeView: View {
         if showWeekly && showUsage {
             let usage = profileManager.activeProfile?.claudeUsage
             let weeklyPct = usage != nil ? Int(usage!.weeklyPercentage) : 45
-            var weeklyText = showUsageLabel ? "Weekly: \(weeklyPct)%" : "\(weeklyPct)%"
+            var weeklyText = showWeeklyLabel ? "Weekly: \(weeklyPct)%" : "\(weeklyPct)%"
 
-            if showProgressBar {
+            if showWeeklyBar {
                 let wFilled = max(0, min(10, (weeklyPct + 5) / 10))
                 let wEmpty = 10 - wFilled
                 var wChars = Array(String(repeating: "▓", count: wFilled) + String(repeating: "░", count: wEmpty))
-                if showPaceMarker {
+                if showWeeklyPaceMarker {
                     let wMarkerPos = max(0, min(9, previewWeeklyMarkerPosition))
                     wChars[wMarkerPos] = "┃"
                 }
                 weeklyText += " \(String(wChars))"
             }
 
-            if showResetTime {
+            if showWeeklyResetTime {
                 let wResetStr = formatWeeklyResetTime(usage?.weeklyResetTime)
                 weeklyText += " → \(wResetStr)"
             }

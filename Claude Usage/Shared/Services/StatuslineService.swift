@@ -135,6 +135,10 @@ if [ -f "$config_file" ]; then
   profile_name="$PROFILE_NAME"
   pace_marker_step_colors=$PACE_MARKER_STEP_COLORS
   show_weekly=$SHOW_WEEKLY
+  show_weekly_bar=$SHOW_WEEKLY_BAR
+  show_weekly_pace_marker=$SHOW_WEEKLY_PACE_MARKER
+  show_weekly_reset=$SHOW_WEEKLY_RESET_TIME
+  show_weekly_label=$SHOW_WEEKLY_LABEL
   show_extra_usage=$SHOW_EXTRA_USAGE
 else
   show_model=1
@@ -156,6 +160,10 @@ else
   profile_name=""
   pace_marker_step_colors=1
   show_weekly=0
+  show_weekly_bar=1
+  show_weekly_pace_marker=1
+  show_weekly_reset=1
+  show_weekly_label=1
   show_extra_usage=0
 fi
 
@@ -550,7 +558,7 @@ if [ "$show_weekly" = "1" ] && [ "$show_usage" = "1" ]; then
       weekly_color="$LEVEL_10"
     fi
 
-    if [ "$show_bar" = "1" ]; then
+    if [ "$show_weekly_bar" = "1" ]; then
       if [ "$weekly_util" -eq 0 ]; then
         w_filled=0
       elif [ "$weekly_util" -eq 100 ]; then
@@ -577,7 +585,7 @@ if [ "$show_weekly" = "1" ] && [ "$show_usage" = "1" ]; then
       weekly_bar=""
     fi
 
-    if [ "$show_pace_marker" = "1" ] && [ "$show_bar" = "1" ] && [ -n "$weekly_reset" ] && [ "$weekly_reset" != "null" ]; then
+    if [ "$show_weekly_pace_marker" = "1" ] && [ "$show_weekly_bar" = "1" ] && [ -n "$weekly_reset" ] && [ "$weekly_reset" != "null" ]; then
       w_iso=$(echo "$weekly_reset" | sed 's/\\.[0-9]*Z$//')
       w_reset_epoch=$(date -ju -f "%Y-%m-%dT%H:%M:%S" "$w_iso" "+%s" 2>/dev/null)
       if [ -n "$w_reset_epoch" ]; then
@@ -616,7 +624,7 @@ if [ "$show_weekly" = "1" ] && [ "$show_usage" = "1" ]; then
     fi
 
     weekly_reset_display=""
-    if [ "$show_reset" = "1" ] && [ -n "$weekly_reset" ] && [ "$weekly_reset" != "null" ]; then
+    if [ "$show_weekly_reset" = "1" ] && [ -n "$weekly_reset" ] && [ "$weekly_reset" != "null" ]; then
       w_iso=$(echo "$weekly_reset" | sed 's/\\.[0-9]*Z$//')
       w_reset_epoch=$(date -ju -f "%Y-%m-%dT%H:%M:%S" "$w_iso" "+%s" 2>/dev/null)
       if [ -n "$w_reset_epoch" ]; then
@@ -635,7 +643,7 @@ if [ "$show_weekly" = "1" ] && [ "$show_usage" = "1" ]; then
       fi
     fi
 
-    if [ "$show_usage_label" = "1" ]; then
+    if [ "$show_weekly_label" = "1" ]; then
       weekly_text="${weekly_color}Weekly: ${weekly_util}%${weekly_bar}${weekly_reset_display}${RESET}"
     else
       weekly_text="${weekly_color}${weekly_util}%${weekly_bar}${weekly_reset_display}${RESET}"
@@ -832,6 +840,10 @@ printf "%s\\n" "$output"
         showProfile: Bool,
         profileName: String,
         showWeekly: Bool = false,
+        showWeeklyBar: Bool = true,
+        showWeeklyPaceMarker: Bool = true,
+        showWeeklyResetTime: Bool = true,
+        showWeeklyLabel: Bool = true,
         showExtraUsage: Bool = false
     ) throws {
         let configPath = Constants.ClaudePaths.claudeDirectory
@@ -867,6 +879,10 @@ SINGLE_COLOR=\(singleColorHex)
 SHOW_PROFILE=\(showProfile ? "1" : "0")
 PROFILE_NAME="\(profileName)"
 SHOW_WEEKLY=\(showWeekly ? "1" : "0")
+SHOW_WEEKLY_BAR=\(showWeeklyBar ? "1" : "0")
+SHOW_WEEKLY_PACE_MARKER=\(showWeeklyPaceMarker ? "1" : "0")
+SHOW_WEEKLY_RESET_TIME=\(showWeeklyResetTime ? "1" : "0")
+SHOW_WEEKLY_LABEL=\(showWeeklyLabel ? "1" : "0")
 SHOW_EXTRA_USAGE=\(showExtraUsage ? "1" : "0")
 """
 
