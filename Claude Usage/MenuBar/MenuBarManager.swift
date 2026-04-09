@@ -895,6 +895,14 @@ class MenuBarManager: NSObject, ObservableObject {
                         // If this is the active profile, also update the manager's usage
                         if profile.id == self.profileManager.activeProfile?.id {
                             self.usage = newUsage
+
+                            // Write statusline cache for instant CLI rendering
+                            if StatuslineService.shared.isInstalled {
+                                StatuslineService.shared.writeUsageCache(
+                                    usage: newUsage,
+                                    profileName: profile.name
+                                )
+                            }
                         }
                     }
                 } catch {
