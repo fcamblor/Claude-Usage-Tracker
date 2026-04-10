@@ -716,6 +716,17 @@
 "claudecode.actions_title" = "İşlemler";
 "claudecode.component_profile" = "Profil adı";
 "claudecode.context_info" = "Bağlam %100 yerine ~%80-95 gösterebilir — Claude limit öncesinde otomatik sıkıştırma yapar ve çıktı token'ları da bağlam alanı kullanır.";
+"claudecode.element_colors_title" = "Öğe Renkleri";
+"claudecode.element_color_directory" = "Dizin";
+"claudecode.element_color_branch" = "Dal";
+"claudecode.element_color_model" = "Model";
+"claudecode.element_color_profile" = "Profil";
+"claudecode.element_color_context" = "Bağlam";
+"claudecode.element_color_separator" = "Ayırıcı";
+"claudecode.element_color_usage" = "Kullanım gradyanı";
+"claudecode.element_color_usage_desc" = "10 seviyeli gradyanı sabit bir renkle değiştir";
+"claudecode.element_color_pace" = "Tempo işaretçisi";
+"claudecode.element_color_pace_desc" = "6 kademeli tempo renklerini sabit bir renkle değiştir";
 "error.generic" = "Hata: %@";
 "personal.button_saving" = "Kaydediliyor...";
 "personal.button_setup_wizard" = "Kurulum Sihirbazı";

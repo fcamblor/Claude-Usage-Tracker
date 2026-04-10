@@ -717,6 +717,17 @@
 "claudecode.actions_title" = "Дії";
 "claudecode.component_profile" = "Назва профілю";
 "claudecode.context_info" = "Контекст може показувати ~80-95% замість 100% — Claude автоматично стискає дані до досягнення ліміту, і вихідні токени також займають місце в контексті.";
+"claudecode.element_colors_title" = "Кольори елементів";
+"claudecode.element_color_directory" = "Каталог";
+"claudecode.element_color_branch" = "Гілка";
+"claudecode.element_color_model" = "Модель";
+"claudecode.element_color_profile" = "Профіль";
+"claudecode.element_color_context" = "Контекст";
+"claudecode.element_color_separator" = "Роздільник";
+"claudecode.element_color_usage" = "Градієнт використання";
+"claudecode.element_color_usage_desc" = "Замінити 10-рівневий градієнт фіксованим кольором";
+"claudecode.element_color_pace" = "Маркер темпу";
+"claudecode.element_color_pace_desc" = "Замінити 6-рівневі кольори темпу фіксованим кольором";
 "error.generic" = "Помилка: %@";
 "personal.button_saving" = "Збереження...";
 "personal.button_setup_wizard" = "Майстер налаштування";
