@@ -498,6 +498,10 @@
 "claudecode.element_color_usage_desc" = "10段階のグラデーションを固定色で上書き";
 "claudecode.element_color_pace" = "ペースマーカー";
 "claudecode.element_color_pace_desc" = "6段階のペース色を固定色で上書き";
+"claudecode.element_color_weekly" = "週次使用量";
+"claudecode.element_color_weekly_desc" = "週次使用量のグラデーションを固定色で上書き";
+"claudecode.element_color_extra" = "追加使用量";
+"claudecode.element_color_extra_desc" = "追加使用量（コスト）のグラデーションを固定色で上書き";
 "error.generic" = "エラー：%@";
 "personal.button_saving" = "保存中...";
 "personal.button_setup_wizard" = "セットアップウィザード";

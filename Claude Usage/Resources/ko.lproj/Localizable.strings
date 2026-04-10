@@ -348,6 +348,10 @@
 "claudecode.element_color_usage_desc" = "10단계 그라데이션을 고정 색상으로 대체";
 "claudecode.element_color_pace" = "페이스 마커";
 "claudecode.element_color_pace_desc" = "6단계 페이스 색상을 고정 색상으로 대체";
+"claudecode.element_color_weekly" = "주간 사용량";
+"claudecode.element_color_weekly_desc" = "주간 사용량 그라디언트를 고정 색상으로 대체";
+"claudecode.element_color_extra" = "추가 사용량";
+"claudecode.element_color_extra_desc" = "추가 사용량(비용) 그라디언트를 고정 색상으로 대체";
 "error.generic" = "오류: %@";
 "personal.button_saving" = "저장 중...";
 "personal.button_setup_wizard" = "설정 마법사";

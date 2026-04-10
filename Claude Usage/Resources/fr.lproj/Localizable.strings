@@ -462,6 +462,10 @@
 "claudecode.element_color_usage_desc" = "Remplace le dégradé à 10 niveaux par une couleur fixe";
 "claudecode.element_color_pace" = "Marqueur de rythme";
 "claudecode.element_color_pace_desc" = "Remplace les 6 niveaux de couleurs de rythme par une couleur fixe";
+"claudecode.element_color_weekly" = "Usage hebdomadaire";
+"claudecode.element_color_weekly_desc" = "Remplace le dégradé d'usage hebdomadaire par une couleur fixe";
+"claudecode.element_color_extra" = "Usage supplémentaire";
+"claudecode.element_color_extra_desc" = "Remplace le dégradé d'usage supplémentaire (coût) par une couleur fixe";
 "error.generic" = "Erreur: %@";
 "personal.button_saving" = "Enregistrement...";
 "personal.button_setup_wizard" = "Assistant de Configuration";

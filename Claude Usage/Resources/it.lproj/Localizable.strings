@@ -482,6 +482,10 @@
 "claudecode.element_color_usage_desc" = "Sostituisci il gradiente a 10 livelli con un colore fisso";
 "claudecode.element_color_pace" = "Indicatore di ritmo";
 "claudecode.element_color_pace_desc" = "Sostituisci i 6 livelli di colore del ritmo con un colore fisso";
+"claudecode.element_color_weekly" = "Uso settimanale";
+"claudecode.element_color_weekly_desc" = "Sostituisci il gradiente di uso settimanale con un colore fisso";
+"claudecode.element_color_extra" = "Uso extra";
+"claudecode.element_color_extra_desc" = "Sostituisci il gradiente di uso extra (costo) con un colore fisso";
 "error.generic" = "Errore: %@";
 "personal.button_saving" = "Salvataggio...";
 "personal.button_setup_wizard" = "Assistente di Configurazione";

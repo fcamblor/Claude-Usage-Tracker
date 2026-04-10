@@ -173,6 +173,16 @@ struct ClaudeCodeView: View {
                                     description: "claudecode.element_color_pace_desc".localized,
                                     hex: $elementColors.paceBaseHex
                                 )
+                                ElementColorRowOptional(
+                                    label: "claudecode.element_color_weekly".localized,
+                                    description: "claudecode.element_color_weekly_desc".localized,
+                                    hex: $elementColors.weeklyBaseHex
+                                )
+                                ElementColorRowOptional(
+                                    label: "claudecode.element_color_extra".localized,
+                                    description: "claudecode.element_color_extra_desc".localized,
+                                    hex: $elementColors.extraUsageBaseHex
+                                )
                             }
                             .padding(.top, DesignTokens.Spacing.small)
                         } label: {
@@ -467,6 +477,14 @@ struct ClaudeCodeView: View {
         if let hex = elementColors.paceBaseHex { return Color(hex: hex) }
         return nil
     }
+    private func previewWeeklyColor(percentage: Int) -> Color {
+        if let hex = elementColors.weeklyBaseHex { return Color(hex: hex) ?? TerminalColors.usageLevel(percentage) }
+        return TerminalColors.usageLevel(percentage)
+    }
+    private func previewExtraColor(percentage: Int) -> Color {
+        if let hex = elementColors.extraUsageBaseHex { return Color(hex: hex) ?? TerminalColors.usageLevel(percentage) }
+        return TerminalColors.usageLevel(percentage)
+    }
 
     /// Preview view showing statusline with appropriate colors
     @ViewBuilder
@@ -654,7 +672,7 @@ struct ClaudeCodeView: View {
             if showWeekly && showUsage {
                 let usage = profileManager.activeProfile?.claudeUsage
                 let weeklyPct = usage != nil ? Int(usage!.weeklyPercentage) : 45
-                let weeklyColor = TerminalColors.usageLevel(weeklyPct)
+                let weeklyColor = previewWeeklyColor(percentage: weeklyPct)
                 if showDirectory || showBranch || showModel || showProfile || showContext || showUsage {
                     Text(" │ ").foregroundColor(TerminalColors.gray)
                 }
@@ -694,7 +712,7 @@ struct ClaudeCodeView: View {
                    let costCurrency = claudeUsage.costCurrency,
                    costLimit > 0 {
                     let costPct = min(100, Int(costUsed / costLimit * 100))
-                    let costColor = TerminalColors.usageLevel(costPct)
+                    let costColor = previewExtraColor(percentage: costPct)
                     Text(String(format: "%.2f %@", costUsed / 100.0, costCurrency))
                         .foregroundColor(costColor)
                 } else {

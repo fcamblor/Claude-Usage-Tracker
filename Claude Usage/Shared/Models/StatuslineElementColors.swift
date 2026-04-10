@@ -42,4 +42,12 @@ struct StatuslineElementColors: Codable, Equatable {
 
     /// Optional override for pace marker colors. `nil` = use the 6-tier standard colors.
     var paceBaseHex: String? = nil
+
+    /// Optional override for the weekly usage gradient. `nil` = use the 10-level gradient
+    /// (or `usageBaseHex` if set, matching the session gradient).
+    var weeklyBaseHex: String? = nil
+
+    /// Optional override for the extra usage (cost) gradient. `nil` = use the 10-level
+    /// gradient (or `usageBaseHex` if set, matching the session gradient).
+    var extraUsageBaseHex: String? = nil
 }

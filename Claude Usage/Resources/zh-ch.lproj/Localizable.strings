@@ -734,6 +734,10 @@
 "claudecode.element_color_usage_desc" = "用固定颜色替换10级渐变";
 "claudecode.element_color_pace" = "节奏标记";
 "claudecode.element_color_pace_desc" = "用固定颜色替换6级节奏颜色";
+"claudecode.element_color_weekly" = "周使用量";
+"claudecode.element_color_weekly_desc" = "用固定颜色替换周使用量渐变";
+"claudecode.element_color_extra" = "额外使用量";
+"claudecode.element_color_extra_desc" = "用固定颜色替换额外使用量（费用）渐变";
 "error.generic" = "错误：%@";
 "personal.button_saving" = "保存中...";
 "personal.button_setup_wizard" = "设置向导";

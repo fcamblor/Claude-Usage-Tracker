@@ -728,6 +728,10 @@
 "claudecode.element_color_usage_desc" = "Override 10-level gradient with a fixed color";
 "claudecode.element_color_pace" = "Pace marker";
 "claudecode.element_color_pace_desc" = "Override 6-tier pace colors with a fixed color";
+"claudecode.element_color_weekly" = "Weekly usage";
+"claudecode.element_color_weekly_desc" = "Override weekly usage gradient with a fixed color";
+"claudecode.element_color_extra" = "Extra usage";
+"claudecode.element_color_extra_desc" = "Override extra usage (cost) gradient with a fixed color";
 "error.generic" = "Error: %@";
 "personal.button_saving" = "Saving...";
 "personal.button_setup_wizard" = "Setup Wizard";

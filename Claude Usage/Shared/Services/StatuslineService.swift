@@ -148,6 +148,8 @@ if [ -f "$config_file" ]; then
   element_color_separator=$ELEMENT_COLOR_SEPARATOR
   element_color_usage=$ELEMENT_COLOR_USAGE
   element_color_pace=$ELEMENT_COLOR_PACE
+  element_color_weekly=$ELEMENT_COLOR_WEEKLY
+  element_color_extra=$ELEMENT_COLOR_EXTRA
 else
   show_model=1
   show_dir=1
@@ -181,6 +183,8 @@ else
   element_color_separator="#808080"
   element_color_usage=""
   element_color_pace=""
+  element_color_weekly=""
+  element_color_extra=""
 fi
 
 input=$(cat)
@@ -626,6 +630,11 @@ if [ "$show_weekly" = "1" ] && [ "$show_usage" = "1" ]; then
       weekly_color="$LEVEL_10"
     fi
 
+    # Per-element override: weekly gets its own fixed color when set
+    if [ "$color_mode" = "perElement" ] && [ -n "$element_color_weekly" ]; then
+      weekly_color=$(hex_to_ansi "$element_color_weekly")
+    fi
+
     if [ "$show_weekly_bar" = "1" ]; then
       if [ "$weekly_util" -eq 0 ]; then
         w_filled=0
@@ -760,6 +769,10 @@ if [ "$show_extra_usage" = "1" ] && [ "$show_usage" = "1" ]; then
       cost_color="$LEVEL_9"
     else
       cost_color="$LEVEL_10"
+    fi
+    # Per-element override: extra usage gets its own fixed color when set
+    if [ "$color_mode" = "perElement" ] && [ -n "$element_color_extra" ]; then
+      cost_color=$(hex_to_ansi "$element_color_extra")
     fi
     extra_usage_text="${cost_color}${cost_used} ${cost_currency}${RESET}"
   fi
@@ -964,6 +977,8 @@ ELEMENT_COLOR_CONTEXT=\(elementColors.contextHex)
 ELEMENT_COLOR_SEPARATOR=\(elementColors.separatorHex)
 ELEMENT_COLOR_USAGE=\(elementColors.usageBaseHex ?? "")
 ELEMENT_COLOR_PACE=\(elementColors.paceBaseHex ?? "")
+ELEMENT_COLOR_WEEKLY=\(elementColors.weeklyBaseHex ?? "")
+ELEMENT_COLOR_EXTRA=\(elementColors.extraUsageBaseHex ?? "")
 """
 
         try config.write(to: configPath, atomically: true, encoding: .utf8)

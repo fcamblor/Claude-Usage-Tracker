@@ -484,6 +484,10 @@
 "claudecode.element_color_usage_desc" = "10-stufigen Farbverlauf durch eine feste Farbe ersetzen";
 "claudecode.element_color_pace" = "Tempo-Markierung";
 "claudecode.element_color_pace_desc" = "6-Stufen-Tempofarben durch eine feste Farbe ersetzen";
+"claudecode.element_color_weekly" = "Wöchentliche Nutzung";
+"claudecode.element_color_weekly_desc" = "Wöchentlichen Nutzungsverlauf durch eine feste Farbe ersetzen";
+"claudecode.element_color_extra" = "Zusätzliche Nutzung";
+"claudecode.element_color_extra_desc" = "Zusätzlichen Nutzungsverlauf (Kosten) durch eine feste Farbe ersetzen";
 "error.generic" = "Fehler: %@";
 "personal.button_saving" = "Speichern...";
 "personal.button_setup_wizard" = "Einrichtungsassistent";

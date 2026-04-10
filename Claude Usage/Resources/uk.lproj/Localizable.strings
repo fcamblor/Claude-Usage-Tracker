@@ -728,6 +728,10 @@
 "claudecode.element_color_usage_desc" = "Замінити 10-рівневий градієнт фіксованим кольором";
 "claudecode.element_color_pace" = "Маркер темпу";
 "claudecode.element_color_pace_desc" = "Замінити 6-рівневі кольори темпу фіксованим кольором";
+"claudecode.element_color_weekly" = "Тижневе використання";
+"claudecode.element_color_weekly_desc" = "Замінити градієнт тижневого використання фіксованим кольором";
+"claudecode.element_color_extra" = "Додаткове використання";
+"claudecode.element_color_extra_desc" = "Замінити градієнт додаткового використання (вартості) фіксованим кольором";
 "error.generic" = "Помилка: %@";
 "personal.button_saving" = "Збереження...";
 "personal.button_setup_wizard" = "Майстер налаштування";

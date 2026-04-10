@@ -727,6 +727,10 @@
 "claudecode.element_color_usage_desc" = "10 seviyeli gradyanı sabit bir renkle değiştir";
 "claudecode.element_color_pace" = "Tempo işaretçisi";
 "claudecode.element_color_pace_desc" = "6 kademeli tempo renklerini sabit bir renkle değiştir";
+"claudecode.element_color_weekly" = "Haftalık kullanım";
+"claudecode.element_color_weekly_desc" = "Haftalık kullanım gradyanını sabit bir renkle değiştir";
+"claudecode.element_color_extra" = "Ekstra kullanım";
+"claudecode.element_color_extra_desc" = "Ekstra kullanım (maliyet) gradyanını sabit bir renkle değiştir";
 "error.generic" = "Hata: %@";
 "personal.button_saving" = "Kaydediliyor...";
 "personal.button_setup_wizard" = "Kurulum Sihirbazı";
