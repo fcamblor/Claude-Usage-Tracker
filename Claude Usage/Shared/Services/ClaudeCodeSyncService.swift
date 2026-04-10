@@ -382,6 +382,87 @@ class ClaudeCodeSyncService {
         }
     }
 
+    // MARK: - Claude Code Config File (oauthAccount)
+
+    /// Finds the actual `.claude.json` file path on disk by probing the known
+    /// candidate locations. Returns nil if none exist.
+    private func locateClaudeConfigFile() -> URL? {
+        for candidate in Constants.ClaudePaths.claudeConfigCandidates
+        where FileManager.default.fileExists(atPath: candidate.path) {
+            return candidate
+        }
+        return nil
+    }
+
+    /// Reads the `oauthAccount` object from Claude Code's `.claude.json` config
+    /// file and returns it as a serialized JSON string. Returns nil if the file
+    /// does not exist, is unreadable, or has no `oauthAccount` field.
+    ///
+    /// Storing the object as a raw JSON string (rather than a typed struct)
+    /// preserves unknown/future fields — Claude Code may add new keys over time,
+    /// and we want to faithfully round-trip whatever is present.
+    func readOAuthAccount() -> String? {
+        guard let url = locateClaudeConfigFile() else {
+            LoggingService.shared.log("readOAuthAccount: no .claude.json config file found")
+            return nil
+        }
+
+        guard let data = try? Data(contentsOf: url),
+              let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let oauthAccount = root["oauthAccount"] as? [String: Any] else {
+            return nil
+        }
+
+        guard let serialized = try? JSONSerialization.data(
+            withJSONObject: oauthAccount,
+            options: [.sortedKeys]
+        ),
+              let jsonString = String(data: serialized, encoding: .utf8) else {
+            LoggingService.shared.log("readOAuthAccount: failed to serialize oauthAccount object")
+            return nil
+        }
+
+        return jsonString
+    }
+
+    /// Writes an `oauthAccount` object (serialized JSON string) back into
+    /// Claude Code's `.claude.json` config file, replacing whatever was there.
+    /// Preserves all other top-level keys in the file. Does nothing if no
+    /// `.claude.json` file exists (we don't want to create a file from scratch
+    /// and accidentally overwrite user settings).
+    func writeOAuthAccount(_ oauthAccountJSON: String) throws {
+        guard let url = locateClaudeConfigFile() else {
+            LoggingService.shared.log("writeOAuthAccount: no .claude.json config file found — skipping write")
+            return
+        }
+
+        // Parse the stored oauthAccount string
+        guard let newAccountData = oauthAccountJSON.data(using: .utf8),
+              let newAccount = try? JSONSerialization.jsonObject(with: newAccountData) as? [String: Any] else {
+            LoggingService.shared.log("writeOAuthAccount: stored oauthAccount JSON is invalid, skipping")
+            throw ClaudeCodeError.invalidJSON
+        }
+
+        // Read + merge existing file (preserve all other top-level keys)
+        let existingData = try Data(contentsOf: url)
+        guard var root = try JSONSerialization.jsonObject(with: existingData) as? [String: Any] else {
+            LoggingService.shared.log("writeOAuthAccount: .claude.json root is not a JSON object")
+            throw ClaudeCodeError.invalidJSON
+        }
+
+        root["oauthAccount"] = newAccount
+
+        // Pretty-print to match Claude Code's on-disk format (best-effort)
+        let updatedData = try JSONSerialization.data(
+            withJSONObject: root,
+            options: [.prettyPrinted, .sortedKeys]
+        )
+
+        // Atomic write so a crash mid-write can't corrupt the file
+        try updatedData.write(to: url, options: [.atomic])
+        LoggingService.shared.log("✓ Updated oauthAccount in \(url.lastPathComponent)")
+    }
+
     // MARK: - Profile Sync Operations
 
     /// Syncs credentials from system to profile (one-time copy)
@@ -396,6 +477,10 @@ class ClaudeCodeSyncService {
             throw ClaudeCodeError.invalidJSON
         }
 
+        // Capture current oauthAccount from .claude.json (if present) so we can
+        // restore it when this profile is re-activated. See issue #175.
+        let capturedOAuthAccount = readOAuthAccount()
+
         // Save to profile directly
         var profiles = ProfileStore.shared.loadProfiles()
         guard let index = profiles.firstIndex(where: { $0.id == profileId }) else {
@@ -403,12 +488,18 @@ class ClaudeCodeSyncService {
         }
 
         profiles[index].cliCredentialsJSON = jsonData
+        if let capturedOAuthAccount = capturedOAuthAccount {
+            profiles[index].oauthAccountJSON = capturedOAuthAccount
+        }
         ProfileStore.shared.saveProfiles(profiles)
 
-        LoggingService.shared.log("Synced CLI credentials to profile: \(profileId)")
+        LoggingService.shared.log("Synced CLI credentials to profile: \(profileId)\(capturedOAuthAccount != nil ? " (with oauthAccount)" : "")")
     }
 
-    /// Applies profile's CLI credentials to system (overwrites current login)
+    /// Applies profile's CLI credentials to system (overwrites current login).
+    /// Also restores the profile's captured `oauthAccount` to `~/.claude.json`
+    /// so that Claude Code's `/status` command reflects the correct account
+    /// after switching (see issue #175).
     func applyProfileCredentials(_ profileId: UUID) throws {
         LoggingService.shared.log("🔄 Applying CLI credentials for profile: \(profileId)")
 
@@ -421,6 +512,18 @@ class ClaudeCodeSyncService {
 
         LoggingService.shared.log("📦 Found CLI credentials, writing to keychain...")
         try writeSystemCredentials(jsonData)
+
+        // Restore the profile's captured oauthAccount (if any) so Claude Code's
+        // /status Status tab shows the right email/org/plan for this profile.
+        if let storedOAuthAccount = profile.oauthAccountJSON {
+            do {
+                try writeOAuthAccount(storedOAuthAccount)
+            } catch {
+                LoggingService.shared.logError("Failed to restore oauthAccount (non-fatal)", error: error)
+            }
+        } else {
+            LoggingService.shared.log("Profile has no stored oauthAccount — skipping .claude.json update")
+        }
 
         LoggingService.shared.log("✅ Applied profile CLI credentials to system: \(profileId)")
     }
@@ -507,6 +610,11 @@ class ClaudeCodeSyncService {
             return
         }
 
+        // Capture latest oauthAccount too, so if the user logged in with a
+        // different account since the last sync we keep the profile's
+        // `.claude.json` identity in sync with its keychain credentials.
+        let freshOAuthAccount = readOAuthAccount()
+
         // Update profile's stored credentials with fresh ones
         var profiles = ProfileStore.shared.loadProfiles()
         guard let index = profiles.firstIndex(where: { $0.id == profileId }) else {
@@ -514,10 +622,13 @@ class ClaudeCodeSyncService {
         }
 
         profiles[index].cliCredentialsJSON = freshJSON
+        if let freshOAuthAccount = freshOAuthAccount {
+            profiles[index].oauthAccountJSON = freshOAuthAccount
+        }
         profiles[index].cliAccountSyncedAt = Date()  // Update sync timestamp
         ProfileStore.shared.saveProfiles(profiles)
 
-        LoggingService.shared.log("✓ Re-synced CLI credentials from system and updated timestamp")
+        LoggingService.shared.log("✓ Re-synced CLI credentials from system and updated timestamp\(freshOAuthAccount != nil ? " (with oauthAccount)" : "")")
     }
 }
 
