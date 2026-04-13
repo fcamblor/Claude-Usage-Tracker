@@ -534,10 +534,11 @@ class MenuBarManager: NSObject, ObservableObject {
                     closePopover()
                 } else {
                     // Different button - close current and show at new position
-                    popover.performClose(nil)
+                    // Use close() instead of performClose() to avoid async race condition
+                    // No need to recreate contentViewController — SwiftUI already observes
+                    // the @Published profile properties set earlier in this method
+                    popover.close()
                     stopMonitoringForOutsideClicks()
-                    // Update content view controller for new profile data
-                    popover.contentViewController = createContentViewController()
                     popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
                     currentPopoverButton = button
                     startMonitoringForOutsideClicks()
@@ -1714,22 +1715,32 @@ extension MenuBarManager: NSPopoverDelegate {
         // Stop monitoring for outside clicks when detaching
         stopMonitoringForOutsideClicks()
 
-        // Create a new window with NEW content view controller
-        // This prevents the popover from losing its content
-        let newContentViewController = createContentViewController()
+        // Create content view controller sized for a window (not a popover).
+        // We don't use createContentViewController() here because its
+        // preferredContentSize/sizingOptions (added by PR #200 for popover
+        // positioning) conflict with the window's layout constraints.
+        let contentView = PopoverContentView(
+            manager: self,
+            onRefresh: { [weak self] in self?.refreshUsage() },
+            onPreferences: { [weak self] in
+                self?.closePopoverOrWindow()
+                self?.preferencesClicked()
+            }
+        )
+        let hostingController = NSHostingController(rootView: contentView)
 
         let window = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 600),
-            styleMask: [.titled, .closable, .fullSizeContentView, .nonactivatingPanel, .hudWindow],
+            contentRect: NSRect(x: 0, y: 0, width: 280, height: 600),
+            styleMask: [.titled, .closable, .nonactivatingPanel, .hudWindow],
             backing: .buffered,
             defer: false
         )
-        window.contentViewController = newContentViewController
+        window.contentViewController = hostingController
         window.title = ""
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
         window.isMovableByWindowBackground = true
-        window.setContentSize(NSSize(width: 320, height: 600))
+        window.setContentSize(NSSize(width: 280, height: 600))
         window.isReleasedWhenClosed = false
         window.level = .floating
         window.isRestorable = false
