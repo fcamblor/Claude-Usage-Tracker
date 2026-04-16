@@ -2,6 +2,9 @@ import Foundation
 
 /// Main data model representing Claude Code usage statistics
 struct ClaudeUsage: Codable, Equatable {
+    /// false for .empty placeholder — never persisted, always true when decoded from real data
+    var isLoaded: Bool = true
+
     // Session data (5-hour rolling window)
     var sessionTokensUsed: Int
     var sessionLimit: Int
@@ -66,7 +69,7 @@ struct ClaudeUsage: Codable, Equatable {
 
     /// Empty usage data (used when no data is available)
     static var empty: ClaudeUsage {
-        ClaudeUsage(
+        var usage = ClaudeUsage(
             sessionTokensUsed: 0,
             sessionLimit: 0,
             sessionPercentage: 0,
@@ -88,6 +91,19 @@ struct ClaudeUsage: Codable, Equatable {
             lastUpdated: Date(),
             userTimezone: .current
         )
+        usage.isLoaded = false
+        return usage
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case sessionTokensUsed, sessionLimit, sessionPercentage, sessionResetTime
+        case weeklyTokensUsed, weeklyLimit, weeklyPercentage, weeklyResetTime
+        case opusWeeklyTokensUsed, opusWeeklyPercentage
+        case sonnetWeeklyTokensUsed, sonnetWeeklyPercentage, sonnetWeeklyResetTime
+        case costUsed, costLimit, costCurrency
+        case overageBalance, overageBalanceCurrency
+        case lastUpdated, userTimezone
+        // isLoaded intentionally excluded: defaults to true on decode, false only for .empty
     }
 
 }
