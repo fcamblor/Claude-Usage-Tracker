@@ -140,6 +140,9 @@
 "multiprofile.use_system_color_description" = "상태 색상 대신 Mac의 강조 색상 사용";
 "multiprofile.active_indicator_title" = "활성 프로파일 표시기 보이기";
 "multiprofile.active_indicator_description" = "현재 활성 프로파일 아이콘 아래에 작은 초록색 밑줄 표시";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */

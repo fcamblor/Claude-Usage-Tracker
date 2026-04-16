@@ -30,7 +30,7 @@ Claude Usage Tracker is a lightweight, native macOS menu bar application that pr
 ### Key Capabilities
 
 - **Multi-Profile Support**: Manage unlimited Claude accounts with isolated credentials and settings
-- **Multi-Profile Display**: Monitor all profiles simultaneously in the menu bar
+- **Multi-Profile Display**: Monitor all profiles simultaneously in the menu bar or in a single stacked popover view
 - **Claude Code Integration**: Sync CLI accounts and auto-switch credentials when changing profiles
 - **Real-Time Monitoring**: Track session, weekly, API console usage, and API costs per profile
 - **Usage History**: Interactive charts tracking session, weekly, and billing data over time
@@ -58,7 +58,7 @@ Claude Usage Tracker is a lightweight, native macOS menu bar application that pr
 
 ## What's New
 
-- **v3.1.0 (2026-04-14)**: Peak hours indicator with flame icon and countdown popover, right-click context menu on menu bar icons, per-element statusline color customization (#208), weekly & extra usage segments in statusline (#177), active profile indicator in multi-profile mode, Nix installation option (#211), 3 new languages (Brazilian Portuguese, Turkish, Ukrainian) bringing total to 12, 13 bug fixes including popover crash on profile switch, app hang on launch, and E3000 unauthorized errors
+- **v3.1.0 (2026-04-14)**: Peak hours indicator with flame icon and countdown popover, right-click context menu on menu bar icons, per-element statusline color customization (#208), weekly & extra usage segments in statusline (#177), active profile indicator in multi-profile mode, new "Show All Profiles in Popover" option to view all selected profiles' stats in a single stacked popover, Nix installation option (#211), 3 new languages (Brazilian Portuguese, Turkish, Ukrainian) bringing total to 12, 13 bug fixes including popover crash on profile switch, app hang on launch, and E3000 unauthorized errors
 
 - **v3.0.3 (2026-03-10)**: 6-tier pace system with colored pace markers, 3 color modes (Multi-Color/Greyscale/Single Color), label toggles, 24-hour time format, terminal-matching preview colors
 

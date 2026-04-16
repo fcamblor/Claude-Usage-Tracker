@@ -455,7 +455,9 @@ struct SmartHeader: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                ProfileSwitcherCompact(onManageProfiles: onManageProfiles)
+                if !(isMultiProfileMode && profileManager.multiProfileConfig.showAllProfilesInPopover) {
+                    ProfileSwitcherCompact(onManageProfiles: onManageProfiles)
+                }
 
                 // Status
                 Button(action: {

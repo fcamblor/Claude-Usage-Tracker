@@ -538,6 +538,9 @@
 "multiprofile.use_system_color_description" = "使用白色而不是状态颜色（绿色/橙色/红色）";
 "multiprofile.active_indicator_title" = "显示活动配置文件指示器";
 "multiprofile.active_indicator_description" = "在当前活动配置文件的图标下显示一条小的绿色下划线";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */
