@@ -152,7 +152,9 @@ struct ManageProfilesView: View {
                             // Show Profile Label Toggle
                             SettingToggle(
                                 title: "multiprofile.show_label".localized,
-                                description: "multiprofile.show_label_description".localized,
+                                description: profileManager.multiProfileConfig.iconStyle == .textual
+                                    ? "multiprofile.show_label_disabled_textual".localized
+                                    : "multiprofile.show_label_description".localized,
                                 isOn: Binding(
                                     get: { profileManager.multiProfileConfig.showProfileLabel },
                                     set: { showLabel in
@@ -163,6 +165,7 @@ struct ManageProfilesView: View {
                                     }
                                 )
                             )
+                            .disabled(profileManager.multiProfileConfig.iconStyle == .textual)
 
                             // Use System Color Toggle
                             SettingToggle(

@@ -551,6 +551,8 @@
 "multiprofile.show_week_description" = "セッションに加えて週間使用量を表示";
 "multiprofile.show_label" = "プロファイル名を表示";
 "multiprofile.show_label_description" = "アイコンの下にプロファイル名を表示";
+"multiprofile.style_textual" = "Text"; // TODO: translate
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "システムカラーを使用";
 "multiprofile.use_system_color_description" = "ステータス色の代わりにMacのアクセントカラーを使用";
 "multiprofile.active_indicator_title" = "アクティブプロファイルインジケーターを表示";

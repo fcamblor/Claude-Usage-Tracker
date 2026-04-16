@@ -529,10 +529,12 @@
 "multiprofile.style_bars" = "Смуги";
 "multiprofile.style_dots" = "Крапки";
 "multiprofile.style_percent" = "Відсоток";
+"multiprofile.style_textual" = "Text";
 "multiprofile.show_week" = "Показувати тижневе використання";
 "multiprofile.show_week_description" = "Відображати тижневе використання на додачу до сесії";
 "multiprofile.show_label" = "Показувати мітку профілю";
 "multiprofile.show_label_description" = "Відображати назву профілю під іконкою";
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "Монохромний";
 "multiprofile.use_system_color_description" = "Використовувати білий колір замість кольорів статусу (зелений/помаранчевий/червоний)";
 "multiprofile.active_indicator_title" = "Показувати індикатор активного профілю";

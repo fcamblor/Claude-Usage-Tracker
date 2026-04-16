@@ -227,6 +227,7 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
     case progressBar  // Horizontal progress bars stacked
     case compact      // Minimal dot indicators
     case percentage   // Percentage text (e.g. "30 · 4")
+    case textual      // Textual: ● S 23% 3h 12m
 
     var displayName: String {
         switch self {
@@ -238,6 +239,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "Compact Dots"
         case .percentage:
             return "Percentage"
+        case .textual:
+            return "Textual"
         }
     }
 
@@ -252,6 +255,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "multiprofile.style_dots"
         case .percentage:
             return "multiprofile.style_percent"
+        case .textual:
+            return "multiprofile.style_textual"
         }
     }
 
@@ -265,6 +270,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "Minimal colored dots"
         case .percentage:
             return "Session and week as colored numbers"
+        case .textual:
+            return "Colored dot, letter, percentage and time remaining"
         }
     }
 
@@ -278,6 +285,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "circle.fill"
         case .percentage:
             return "percent"
+        case .textual:
+            return "textformat"
         }
     }
 }

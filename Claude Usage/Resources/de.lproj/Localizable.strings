@@ -551,6 +551,8 @@
 "multiprofile.show_week_description" = "Wöchentliche Nutzung zusätzlich zur Sitzung anzeigen";
 "multiprofile.show_label" = "Profilname anzeigen";
 "multiprofile.show_label_description" = "Profilname unter dem Symbol anzeigen";
+"multiprofile.style_textual" = "Text"; // TODO: translate
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "Systemfarbe verwenden";
 "multiprofile.use_system_color_description" = "Akzentfarbe des Mac anstelle der Statusfarben verwenden";
 "multiprofile.active_indicator_title" = "Aktiven Profil-Indikator anzeigen";

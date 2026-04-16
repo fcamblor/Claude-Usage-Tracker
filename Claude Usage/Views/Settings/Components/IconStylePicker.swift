@@ -13,7 +13,7 @@ struct IconStylePicker: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let cardWidth = (geometry.size.width - (12 * 4)) / 5  // 5 cards with 12px spacing
+            let cardWidth = (geometry.size.width - (12 * 5)) / 6  // 6 cards with 12px spacing
             HStack(alignment: .top, spacing: 12) {
                 ForEach(MenuBarIconStyle.allCases, id: \.self) { style in
                     IconStyleCard(
@@ -132,6 +132,16 @@ private struct IconPreviewLarge: View {
                 Circle()
                     .fill(Color.green)
                     .frame(width: 10, height: 10)
+
+            case .textual:
+                HStack(spacing: 2) {
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 5, height: 5)
+                    Text("S 60%")
+                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                        .foregroundColor(.primary)
+                }
             }
         }
     }

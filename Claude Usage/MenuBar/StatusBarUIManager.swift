@@ -305,6 +305,18 @@ final class StatusBarUIManager {
     func updateMultiProfileButtons(profiles: [Profile], config: MultiProfileDisplayConfig, activeProfileId: UUID? = nil) {
         guard isMultiProfileMode else { return }
 
+        // In textual mode, only the active profile is shown — hide all others
+        let selectedProfiles = profiles.filter { $0.isSelectedForDisplay }
+        if config.iconStyle == .textual {
+            for profile in selectedProfiles {
+                multiProfileStatusItems[profile.id]?.isVisible = (profile.id == activeProfileId)
+            }
+        } else {
+            for profile in selectedProfiles {
+                multiProfileStatusItems[profile.id]?.isVisible = true
+            }
+        }
+
         for profile in profiles where profile.isSelectedForDisplay {
             guard let statusItem = multiProfileStatusItems[profile.id],
                   let button = statusItem.button else {
@@ -448,6 +460,21 @@ final class StatusBarUIManager {
                     monochromeMode: useMonochrome,
                     isDarkMode: menuBarIsDark,
                     useSystemColor: false,
+                    sessionPaceStatus: sessionPaceStatus,
+                    weekPaceStatus: config.showWeek ? weekPaceStatus : nil,
+                    showPaceMarker: config.showPaceMarker
+                )
+            case .textual:
+                image = renderer.createMultiProfileTextual(
+                    sessionPercentage: sessionDisplay,
+                    weekPercentage: config.showWeek ? weekDisplay : nil,
+                    sessionStatus: sessionStatus,
+                    weekStatus: weekStatus,
+                    monochromeMode: useMonochrome,
+                    isDarkMode: menuBarIsDark,
+                    useSystemColor: false,
+                    usage: usage,
+                    showTimeMarker: config.showTimeMarker,
                     sessionPaceStatus: sessionPaceStatus,
                     weekPaceStatus: config.showWeek ? weekPaceStatus : nil,
                     showPaceMarker: config.showPaceMarker
