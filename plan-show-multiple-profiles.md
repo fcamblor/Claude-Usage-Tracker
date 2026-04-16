@@ -42,6 +42,8 @@ Le profil **actif** (subscription en cours) est visuellement mis en avant.
 │  │  Weekly:   █░░░░░ 15%  │ │
 │  └─────────────────────────┘ │
 │  ...                        │
+├─────────────────────────────┤
+│  ContextualInsights         │  ← profil actif uniquement
 └─────────────────────────────┘
 ```
 
@@ -136,6 +138,7 @@ SettingToggle(
 ```
 if displayMode == .multi && showAllProfilesInPopover
   → MultiProfileDashboard(...)     // NOUVEAU
+  → ContextualInsights(usage: activeProfileUsage)  // conservé, profil actif uniquement
 else
   → viewing tag existant (l.144-188)
   → SmartUsageDashboard existant (l.191)
@@ -145,8 +148,10 @@ else
 Le branchement remplace **à la fois** le viewing tag (qui n'a plus de
 sens quand tous les profils sont visibles) et le SmartUsageDashboard.
 
-Les `ContextualInsights` ne sont PAS affichées en mode all-profiles
-(trop de bruit — un seul insight par profil n'est pas actionnable).
+Les `ContextualInsights` sont **conservées en mode all-profiles**, mais
+alimentées uniquement par le `claudeUsage` du **profil actif**. Cela
+donne un insight actionnable sur l'abonnement en cours sans ajouter de
+bruit (pas d'insight par profil secondaire).
 
 **La largeur du popover reste à 280pt** (l.202). Les `ProfileUsageCard`
 sont conçues pour ce gabarit.
