@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.1.0] - 2026-04-14
 
+### Textual Icon Style
+
+- **New "Textual" Icon Style**: Menu bar now supports a text-based rendering (`● S 23% 3h 12m`): colored status dot (pace-aware or threshold-colored), metric letter (`S` for session / `W` for weekly), percentage, and optional time remaining
+- Responds to all existing color modes (Multi-Color, Greyscale, Single Color) and pace marker settings
+- Available in `Icon Style` picker alongside the existing 5 styles
+
 ### Right-Click Context Menu
 
 - **Native macOS Context Menu**: Right-click any status bar icon to access Refresh, Settings (Cmd+,), and Quit (Cmd+Q) — left-click continues to open the popover as before

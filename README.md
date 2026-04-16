@@ -36,7 +36,7 @@ Claude Usage Tracker is a lightweight, native macOS menu bar application that pr
 - **Usage History**: Interactive charts tracking session, weekly, and billing data over time
 - **Global Shortcuts**: System-wide keyboard shortcuts (no Accessibility permission)
 - **Headless Mode**: Works on headless Macs via Remote Desktop
-- **Customizable Interface**: 5 icon styles + 3 color modes (Multi-Color/Greyscale/Single Color) + per-element statusline colors + remaining/used percentage toggle
+- **Customizable Interface**: 6 icon styles + 3 color modes (Multi-Color/Greyscale/Single Color) + per-element statusline colors + remaining/used percentage toggle
 - **Smart Automation**: Auto-start sessions, auto-switch profiles, threshold notifications
 - **Developer Tools**: Terminal statusline integration with model, context, profile display, weekly/extra usage segments, pace markers, per-element colors, and color modes
 - **Privacy-First**: Local storage, minimal anonymous analytics (version-only heartbeat), no cloud sync
