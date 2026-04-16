@@ -529,10 +529,12 @@
 "multiprofile.style_bars" = "Bars";
 "multiprofile.style_dots" = "Dots";
 "multiprofile.style_percent" = "Percent";
+"multiprofile.style_textual" = "Text";
 "multiprofile.show_week" = "Show Week Usage";
 "multiprofile.show_week_description" = "Display weekly usage in addition to session";
 "multiprofile.show_label" = "Show Profile Label";
 "multiprofile.show_label_description" = "Display profile name below the icon";
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels";
 "multiprofile.use_system_color" = "Monochrome";
 "multiprofile.use_system_color_description" = "Use white color instead of status colors (green/orange/red)";
 "multiprofile.active_indicator_title" = "Show Active Profile Indicator";

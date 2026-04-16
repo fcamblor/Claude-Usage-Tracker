@@ -136,6 +136,8 @@
 "multiprofile.show_week_description" = "세션 외에 주간 사용량 표시";
 "multiprofile.show_label" = "프로필 이름 표시";
 "multiprofile.show_label_description" = "아이콘 아래에 프로필 이름 표시";
+"multiprofile.style_textual" = "Text"; // TODO: translate
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "시스템 색상 사용";
 "multiprofile.use_system_color_description" = "상태 색상 대신 Mac의 강조 색상 사용";
 "multiprofile.active_indicator_title" = "활성 프로파일 표시기 보이기";
