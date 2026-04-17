@@ -137,6 +137,19 @@ final class MenuBarIconRenderer {
                 paceStatus: paceStatus,
                 showPaceMarker: showPaceMarker
             )
+        case .textual:
+            return createTextualStyle(
+                metricType: metricType,
+                metricData: metricData,
+                isDarkMode: isDarkMode,
+                colorMode: colorMode,
+                singleColorHex: singleColorHex,
+                showIconName: showIconName,
+                usage: usage,
+                showTimeMarker: globalConfig.showTimeMarker,
+                paceStatus: paceStatus,
+                showPaceMarker: showPaceMarker
+            )
         }
     }
 
@@ -1314,7 +1327,239 @@ final class MenuBarIconRenderer {
         return image
     }
 
+    // MARK: - Textual Style Constants
+
+    private static let singleProfileFontSize: CGFloat = 14
+    private static let multiProfileFontSize: CGFloat = 13
+    private static let menuBarIconHeight: CGFloat = 20
+
+    // MARK: - Textual Style (Single-Profile)
+
+    /// ● S 23% 3h 12m
+    private func createTextualStyle(
+        metricType: MenuBarMetricType,
+        metricData: MetricData,
+        isDarkMode: Bool,
+        colorMode: MenuBarColorMode,
+        singleColorHex: String,
+        showIconName: Bool,
+        usage: ClaudeUsage,
+        showTimeMarker: Bool,
+        paceStatus: PaceStatus?,
+        showPaceMarker: Bool
+    ) -> NSImage {
+        let font = NSFont.monospacedDigitSystemFont(ofSize: Self.singleProfileFontSize, weight: .semibold)
+        let foregroundColor = menuBarForegroundColor(isDarkMode: isDarkMode)
+
+        let dotColor: NSColor
+        if showPaceMarker, let pace = paceStatus {
+            dotColor = pace.color
+        } else {
+            let statusColor = getColorForMode(colorMode, statusLevel: metricData.statusLevel, singleColorHex: singleColorHex, isDarkMode: isDarkMode)
+            dotColor = (colorMode == .monochrome) ? NSColor.secondaryLabelColor : statusColor
+        }
+
+        let letter: String
+        switch metricType {
+        case .session: letter = "S"
+        case .week: letter = "W"
+        case .api: letter = "A"
+        }
+
+        let resetTime: Date?
+        let duration: TimeInterval
+        switch metricType {
+        case .session:
+            resetTime = usage.sessionResetTime
+            duration = Constants.sessionWindow
+        case .week:
+            resetTime = usage.weeklyResetTime
+            duration = Constants.weeklyWindow
+        case .api:
+            resetTime = nil
+            duration = 0
+        }
+
+        let attributed = NSMutableAttributedString()
+        appendTextualSegment(
+            to: attributed,
+            letter: letter,
+            percentageText: metricData.displayText,
+            dotColor: dotColor,
+            resetTime: resetTime,
+            duration: duration,
+            showTimeMarker: showTimeMarker,
+            font: font,
+            foregroundColor: foregroundColor,
+            isDataAvailable: usage.isLoaded
+        )
+
+        let textSize = attributed.size()
+        let image = NSImage(size: NSSize(width: textSize.width + 2, height: Self.menuBarIconHeight))
+
+        image.lockFocus()
+        defer { image.unlockFocus() }
+
+        let textY = (Self.menuBarIconHeight - textSize.height) / 2
+        attributed.draw(at: NSPoint(x: 1, y: textY))
+
+        return image
+    }
+
+    // MARK: - Textual Style (Multi-Profile)
+
+    /// Format: ● S 23% 3h12m | ● W 88% 2d 23m
+    func createMultiProfileTextual(
+        sessionPercentage: Double,
+        weekPercentage: Double?,
+        sessionStatus: UsageStatusLevel,
+        weekStatus: UsageStatusLevel,
+        monochromeMode: Bool,
+        isDarkMode: Bool,
+        useSystemColor: Bool = false,
+        usage: ClaudeUsage,
+        showTimeMarker: Bool,
+        sessionPaceStatus: PaceStatus? = nil,
+        weekPaceStatus: PaceStatus? = nil,
+        showPaceMarker: Bool = false
+    ) -> NSImage {
+        let font = NSFont.monospacedDigitSystemFont(ofSize: Self.multiProfileFontSize, weight: .semibold)
+        let foregroundColor = menuBarForegroundColor(isDarkMode: isDarkMode)
+
+        let attributed = NSMutableAttributedString()
+
+        let sessionDotColor = multiProfileDotColor(
+            paceStatus: sessionPaceStatus, showPaceMarker: showPaceMarker,
+            status: sessionStatus, monochromeMode: monochromeMode,
+            useSystemColor: useSystemColor, isDarkMode: isDarkMode
+        )
+        appendTextualSegment(
+            to: attributed,
+            letter: "S",
+            percentageText: "\(Int(sessionPercentage))%",
+            dotColor: sessionDotColor,
+            resetTime: usage.sessionResetTime,
+            duration: Constants.sessionWindow,
+            showTimeMarker: showTimeMarker,
+            font: font,
+            foregroundColor: foregroundColor,
+            isDataAvailable: usage.isLoaded
+        )
+
+        if let weekPct = weekPercentage {
+            attributed.append(NSAttributedString(string: " | ", attributes: [
+                .font: font,
+                .foregroundColor: foregroundColor.withAlphaComponent(0.4)
+            ]))
+
+            let weekDotColor = multiProfileDotColor(
+                paceStatus: weekPaceStatus, showPaceMarker: showPaceMarker,
+                status: weekStatus, monochromeMode: monochromeMode,
+                useSystemColor: useSystemColor, isDarkMode: isDarkMode
+            )
+            appendTextualSegment(
+                to: attributed,
+                letter: "W",
+                percentageText: "\(Int(weekPct))%",
+                dotColor: weekDotColor,
+                resetTime: usage.weeklyResetTime,
+                duration: Constants.weeklyWindow,
+                showTimeMarker: showTimeMarker,
+                font: font,
+                foregroundColor: foregroundColor,
+                isDataAvailable: usage.isLoaded
+            )
+        }
+
+        let textSize = attributed.size()
+        let image = NSImage(size: NSSize(width: textSize.width + 2, height: max(textSize.height, 1)))
+
+        image.lockFocus()
+        defer { image.unlockFocus() }
+
+        attributed.draw(at: NSPoint(x: 1, y: 0))
+
+        return image
+    }
+
+    private func multiProfileDotColor(
+        paceStatus: PaceStatus?,
+        showPaceMarker: Bool,
+        status: UsageStatusLevel,
+        monochromeMode: Bool,
+        useSystemColor: Bool,
+        isDarkMode: Bool
+    ) -> NSColor {
+        if showPaceMarker, let pace = paceStatus {
+            return pace.color
+        } else if monochromeMode {
+            return NSColor.secondaryLabelColor
+        } else {
+            return getColor(for: status, monochromeMode: false, useSystemColor: useSystemColor, isDarkMode: isDarkMode)
+        }
+    }
+
+    /// Appends a single textual segment (● S 23% 3h12m) to an attributed string
+    private func appendTextualSegment(
+        to attributed: NSMutableAttributedString,
+        letter: String,
+        percentageText: String,
+        dotColor: NSColor,
+        resetTime: Date?,
+        duration: TimeInterval,
+        showTimeMarker: Bool,
+        font: NSFont,
+        foregroundColor: NSColor,
+        isDataAvailable: Bool = true
+    ) {
+        attributed.append(NSAttributedString(string: "●", attributes: [
+            .font: font,
+            .foregroundColor: dotColor
+        ]))
+
+        let displayPct = isDataAvailable ? percentageText : "?"
+        attributed.append(NSAttributedString(string: " \(letter) \(displayPct)", attributes: [
+            .font: font,
+            .foregroundColor: foregroundColor
+        ]))
+
+        if showTimeMarker {
+            let timeStr: String?
+            if !isDataAvailable {
+                timeStr = "?"
+            } else {
+                timeStr = formatTimeRemaining(resetTime: resetTime, duration: duration)
+            }
+            if let timeStr = timeStr {
+                attributed.append(NSAttributedString(string: " \(timeStr)", attributes: [
+                    .font: font,
+                    .foregroundColor: foregroundColor.withAlphaComponent(0.7)
+                ]))
+            }
+        }
+    }
+
     // MARK: - Helper Methods
+
+    /// Formats time remaining until reset as a compact string (e.g. "3h 12m", "2d 3h")
+    /// Omits zero components: "2h" not "0d 2h 0m"
+    func formatTimeRemaining(resetTime: Date?, duration: TimeInterval) -> String? {
+        guard let resetTime = resetTime else { return nil }
+        let remaining = resetTime.timeIntervalSinceNow
+        guard remaining > 0 else { return nil }
+
+        let totalMinutes = Int(remaining / 60)
+        let days = totalMinutes / (24 * 60)
+        let hours = (totalMinutes % (24 * 60)) / 60
+        let minutes = totalMinutes % 60
+
+        var parts: [String] = []
+        if days > 0 { parts.append("\(days)d") }
+        if hours > 0 { parts.append("\(hours)h") }
+        if minutes > 0 { parts.append("\(minutes)m") }
+
+        return parts.isEmpty ? "0m" : parts.joined(separator: " ")
+    }
 
     /// Returns the appropriate foreground color for menu bar icons based on appearance
     /// This is needed because NSColor.labelColor doesn't resolve correctly in image drawing contexts

@@ -7,6 +7,7 @@ enum MenuBarIconStyle: String, CaseIterable, Codable {
     case percentageOnly
     case icon
     case compact
+    case textual
 
     var displayName: String {
         switch self {
@@ -20,6 +21,8 @@ enum MenuBarIconStyle: String, CaseIterable, Codable {
             return "Icon with Bar"
         case .compact:
             return "Compact"
+        case .textual:
+            return "Textual"
         }
     }
 
@@ -35,6 +38,8 @@ enum MenuBarIconStyle: String, CaseIterable, Codable {
             return "Circular ring with progress indicator"
         case .compact:
             return "Minimalist dot indicator"
+        case .textual:
+            return "Colored dot with letter, percentage, and time remaining"
         }
     }
 }

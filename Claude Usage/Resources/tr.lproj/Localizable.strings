@@ -529,14 +529,19 @@
 "multiprofile.style_bars" = "Çubuklar";
 "multiprofile.style_dots" = "Noktalar";
 "multiprofile.style_percent" = "Yüzde";
+"multiprofile.style_textual" = "Text";
 "multiprofile.show_week" = "Haftalık Kullanımı Göster";
 "multiprofile.show_week_description" = "Oturuma ek olarak haftalık kullanımı da göster";
 "multiprofile.show_label" = "Profil Etiketini Göster";
 "multiprofile.show_label_description" = "Simgenin altında profil adını göster";
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "Tek Renk";
 "multiprofile.use_system_color_description" = "Durum renkleri (yeşil/turuncu/kırmızı) yerine beyaz renk kullan";
 "multiprofile.active_indicator_title" = "Aktif Profil Göstergesini Göster";
 "multiprofile.active_indicator_description" = "Şu anda aktif olan profilin simgesinin altında küçük bir yeşil alt çizgi gösterir";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */

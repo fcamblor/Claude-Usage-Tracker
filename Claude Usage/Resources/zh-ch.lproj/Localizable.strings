@@ -530,14 +530,19 @@
 "multiprofile.style_bars" = "条形";
 "multiprofile.style_dots" = "圆点";
 "multiprofile.style_percent" = "百分比";
+"multiprofile.style_textual" = "Text";
 "multiprofile.show_week" = "显示每周使用量";
 "multiprofile.show_week_description" = "除了会话使用量外，还显示每周使用量";
 "multiprofile.show_label" = "显示配置文件标签";
 "multiprofile.show_label_description" = "在图标下方显示配置文件名称";
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "单色";
 "multiprofile.use_system_color_description" = "使用白色而不是状态颜色（绿色/橙色/红色）";
 "multiprofile.active_indicator_title" = "显示活动配置文件指示器";
 "multiprofile.active_indicator_description" = "在当前活动配置文件的图标下显示一条小的绿色下划线";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */

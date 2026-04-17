@@ -227,6 +227,7 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
     case progressBar  // Horizontal progress bars stacked
     case compact      // Minimal dot indicators
     case percentage   // Percentage text (e.g. "30 · 4")
+    case textual      // Textual: ● S 23% 3h 12m
 
     var displayName: String {
         switch self {
@@ -238,6 +239,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "Compact Dots"
         case .percentage:
             return "Percentage"
+        case .textual:
+            return "Textual"
         }
     }
 
@@ -252,6 +255,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "multiprofile.style_dots"
         case .percentage:
             return "multiprofile.style_percent"
+        case .textual:
+            return "multiprofile.style_textual"
         }
     }
 
@@ -265,6 +270,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "Minimal colored dots"
         case .percentage:
             return "Session and week as colored numbers"
+        case .textual:
+            return "Colored dot, letter, percentage and time remaining"
         }
     }
 
@@ -278,6 +285,8 @@ enum MultiProfileIconStyle: String, Codable, CaseIterable {
             return "circle.fill"
         case .percentage:
             return "percent"
+        case .textual:
+            return "textformat"
         }
     }
 }
@@ -293,6 +302,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
     var usePaceColoring: Bool // If true, color indicators based on projected usage pace
     var showRemainingPercentage: Bool // If true, show remaining capacity instead of used percentage
     var showActiveProfileIndicator: Bool // If true, show a green underline on the active profile's icon
+    var showAllProfilesInPopover: Bool
 
     init(
         iconStyle: MultiProfileIconStyle = .concentric,
@@ -303,7 +313,8 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         showPaceMarker: Bool = true,
         usePaceColoring: Bool = true,
         showRemainingPercentage: Bool = false,
-        showActiveProfileIndicator: Bool = false
+        showActiveProfileIndicator: Bool = false,
+        showAllProfilesInPopover: Bool = false
     ) {
         self.iconStyle = iconStyle
         self.showWeek = showWeek
@@ -314,6 +325,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         self.usePaceColoring = usePaceColoring
         self.showRemainingPercentage = showRemainingPercentage
         self.showActiveProfileIndicator = showActiveProfileIndicator
+        self.showAllProfilesInPopover = showAllProfilesInPopover
     }
 
     // MARK: - Codable (Custom decoder for backwards compatibility)
@@ -328,6 +340,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         case usePaceColoring
         case showRemainingPercentage
         case showActiveProfileIndicator
+        case showAllProfilesInPopover
     }
 
     init(from decoder: Decoder) throws {
@@ -343,6 +356,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         usePaceColoring = try container.decodeIfPresent(Bool.self, forKey: .usePaceColoring) ?? false
         showRemainingPercentage = try container.decodeIfPresent(Bool.self, forKey: .showRemainingPercentage) ?? false
         showActiveProfileIndicator = try container.decodeIfPresent(Bool.self, forKey: .showActiveProfileIndicator) ?? false
+        showAllProfilesInPopover = try container.decodeIfPresent(Bool.self, forKey: .showAllProfilesInPopover) ?? false
     }
 
     static var `default`: MultiProfileDisplayConfig {

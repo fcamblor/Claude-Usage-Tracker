@@ -5,7 +5,22 @@ All notable changes to Claude Usage Tracker will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-04-17
+
+> Fork release by [@fcamblor](https://github.com/fcamblor) — builds on 3.1.0 with additional fixes and improvements.
+
+### Fixed
+
+- **Credential cross-profile contamination**: Prevent resyncBeforeSwitching from mixing credentials across profiles
+- **Stable status item name**: Status item name no longer changes unexpectedly between updates
+
 ## [3.1.0] - 2026-04-14
+
+### Textual Icon Style
+
+- **New "Textual" Icon Style**: Menu bar now supports a text-based rendering (`● S 23% 3h 12m`): colored status dot (pace-aware or threshold-colored), metric letter (`S` for session / `W` for weekly), percentage, and optional time remaining
+- Responds to all existing color modes (Multi-Color, Greyscale, Single Color) and pace marker settings
+- Available in `Icon Style` picker alongside the existing 5 styles
 
 ### Right-Click Context Menu
 
@@ -20,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Expanded Statusline**: Dedicated weekly and extra usage segments now rendered alongside session usage in the statusline
 - **Independent Weekly Display**: Show/hide weekly segment and separate weekly toggle options
+
+### Multi-Profile Popover
+
+- **Show All Profiles in Popover**: New toggle in Multi-Profile settings to display all selected profiles' usage stats stacked in the popover simultaneously, with the active profile listed first; Contextual Insights restricted to the active profile only in this mode
 
 ### Active Profile Indicator
 

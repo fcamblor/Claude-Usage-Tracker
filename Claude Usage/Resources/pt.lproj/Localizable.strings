@@ -549,10 +549,15 @@
 "multiprofile.show_week_description" = "Exibir uso semanal além da sessão";
 "multiprofile.show_label" = "Mostrar Nome do Perfil";
 "multiprofile.show_label_description" = "Exibir nome do perfil abaixo do ícone";
+"multiprofile.style_textual" = "Text"; // TODO: translate
+"multiprofile.show_label_disabled_textual" = "Textual style already includes S/W labels"; // TODO: translate
 "multiprofile.use_system_color" = "Usar Cor do Sistema";
 "multiprofile.use_system_color_description" = "Usar a cor de destaque do Mac em vez das cores de status";
 "multiprofile.active_indicator_title" = "Mostrar Indicador de Perfil Ativo";
 "multiprofile.active_indicator_description" = "Mostra um pequeno sublinhado verde sob o ícone do perfil atualmente ativo";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */
