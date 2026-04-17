@@ -12,6 +12,7 @@ on:
 
 jobs:
   generate-appcast:
+    if: github.repository == 'hamed-elfayome/Claude-Usage-Tracker'
     runs-on: macos-latest
     timeout-minutes: 15
 
