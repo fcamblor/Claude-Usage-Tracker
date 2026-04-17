@@ -537,6 +537,9 @@
 "multiprofile.use_system_color_description" = "Використовувати білий колір замість кольорів статусу (зелений/помаранчевий/червоний)";
 "multiprofile.active_indicator_title" = "Показувати індикатор активного профілю";
 "multiprofile.active_indicator_description" = "Показує невелике зелене підкреслення під іконкою поточного активного профілю";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */

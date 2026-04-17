@@ -1,6 +1,71 @@
 import SwiftUI
 import Charts
 
+// MARK: - Shared helpers
+
+/// Returns up to two initials from a profile name (e.g. "John Doe" → "JD", "Alice" → "AL").
+/// Falls back to "?" for empty or whitespace-only names.
+func profileInitials(for name: String) -> String {
+    let words = name.split(separator: " ")
+    if words.count >= 2 {
+        return String(words[0].prefix(1) + words[1].prefix(1)).uppercased()
+    } else if let first = words.first {
+        return String(first.prefix(2)).uppercased()
+    }
+    return "?"
+}
+
+/// Sorts profiles with active profile first, then alphabetically by name.
+/// Used in the multi-profile dashboard for stable, predictable ordering.
+func sortedProfiles(_ profiles: [Profile], activeProfileId: UUID?) -> [Profile] {
+    profiles.sorted { a, b in
+        let aIsActive = a.id == activeProfileId
+        let bIsActive = b.id == activeProfileId
+        if aIsActive != bIsActive { return aIsActive }
+        return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+    }
+}
+
+// MARK: - Profile Header Row
+
+/// Reusable avatar + name + "Active" badge row used in both single-profile and multi-profile views.
+struct ProfileHeaderRow: View {
+    let name: String
+    let isActive: Bool
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(Color.accentColor.opacity(0.15))
+                    .frame(width: 20, height: 20)
+                Text(profileInitials(for: name))
+                    .font(.system(size: 8, weight: .bold, design: .rounded))
+                    .foregroundColor(.accentColor)
+            }
+
+            Text(name)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(.primary)
+                .lineLimit(1)
+
+            Spacer()
+
+            if isActive {
+                Text("multiprofile.active_badge".localized)
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundColor(.accentColor)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(
+                        Capsule()
+                            .fill(Color.accentColor.opacity(0.12))
+                    )
+            }
+        }
+    }
+}
+
 // MARK: - Always-active vibrancy background
 struct VisualEffectBackground: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
@@ -62,16 +127,6 @@ struct PopoverContentView: View {
     @State private var isRefreshing = false
     @State private var showInsights = false
     @StateObject private var profileManager = ProfileManager.shared
-
-    private func profileInitials(for name: String) -> String {
-        let words = name.split(separator: " ")
-        if words.count >= 2 {
-            return String(words[0].prefix(1) + words[1].prefix(1)).uppercased()
-        } else if let first = words.first {
-            return String(first.prefix(2)).uppercased()
-        }
-        return "?"
-    }
 
     // Computed properties for multi-profile mode support
     private var displayUsage: ClaudeUsage {
@@ -141,60 +196,52 @@ struct PopoverContentView: View {
                 }
             }
 
-            // Viewing usage tag (shown in multi-profile mode)
-            if profileManager.displayMode == .multi,
-               let viewingProfile = manager.clickedProfileId.flatMap({ id in
-                   profileManager.profiles.first(where: { $0.id == id })
-               }) ?? profileManager.activeProfile {
-                HStack(spacing: 8) {
-                    // Profile initials avatar
-                    ZStack {
-                        Circle()
-                            .fill(Color.accentColor.opacity(0.15))
-                            .frame(width: 20, height: 20)
-
-                        Text(profileInitials(for: viewingProfile.name))
-                            .font(.system(size: 8, weight: .bold, design: .rounded))
-                            .foregroundColor(.accentColor)
-                    }
-
-                    Text(viewingProfile.name)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.primary)
-                        .lineLimit(1)
-
-                    Spacer()
-
-                    if viewingProfile.id == profileManager.activeProfile?.id {
-                        Text("Active")
-                            .font(.system(size: 8, weight: .semibold))
-                            .foregroundColor(.accentColor)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 2)
-                            .background(
-                                Capsule()
-                                    .fill(Color.accentColor.opacity(0.12))
-                            )
-                    }
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 6)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.primary.opacity(0.03))
+            if profileManager.displayMode == .multi && profileManager.multiProfileConfig.showAllProfilesInPopover {
+                MultiProfileDashboard(
+                    profiles: profileManager.profiles.filter { $0.isSelectedForDisplay },
+                    activeProfileId: profileManager.activeProfile?.id,
+                    showRemainingPercentage: profileManager.multiProfileConfig.showRemainingPercentage,
+                    showTimeMarker: profileManager.multiProfileConfig.showTimeMarker,
+                    usePaceColoring: profileManager.multiProfileConfig.usePaceColoring,
+                    timeDisplay: SharedDataStore.shared.loadPopoverTimeDisplay()
                 )
-                .padding(.horizontal, 10)
-                .padding(.top, 6)
-            }
+                .frame(maxHeight: 800)
 
-            // Usage
-            SmartUsageDashboard(usage: displayUsage, apiUsage: displayAPIUsage)
+                // Insights on active profile only — secondary profiles have no actionable insight
+                // (no active subscription there), adding one per profile would be noise.
+                if showInsights, let activeUsage = profileManager.activeProfile?.claudeUsage {
+                    PopoverDivider()
+                    ContextualInsights(usage: activeUsage)
+                        .transition(.opacity)
+                }
+            } else {
+                if profileManager.displayMode == .multi,
+                   let viewingProfile = manager.clickedProfileId.flatMap({ id in
+                       profileManager.profiles.first(where: { $0.id == id })
+                   }) ?? profileManager.activeProfile {
+                    ProfileHeaderRow(
+                        name: viewingProfile.name,
+                        isActive: viewingProfile.id == profileManager.activeProfile?.id
+                    )
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.primary.opacity(0.03))
+                    )
+                    .padding(.horizontal, 10)
+                    .padding(.top, 6)
+                }
 
-            // Contextual Insights
-            if showInsights {
-                PopoverDivider()
-                ContextualInsights(usage: displayUsage)
-                    .transition(.opacity)
+                // Usage
+                SmartUsageDashboard(usage: displayUsage, apiUsage: displayAPIUsage)
+
+                // Contextual Insights
+                if showInsights {
+                    PopoverDivider()
+                    ContextualInsights(usage: displayUsage)
+                        .transition(.opacity)
+                }
             }
 
         }
@@ -346,7 +393,7 @@ struct ProfileSwitcherBar: View {
                         .fill(Color.accentColor)
                         .frame(width: 28, height: 28)
 
-                    Text(profileInitials)
+                    Text(activeProfileInitials)
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
                         .foregroundColor(.white)
                 }
@@ -399,15 +446,9 @@ struct ProfileSwitcherBar: View {
         }
     }
 
-    private var profileInitials: String {
+    private var activeProfileInitials: String {
         guard let name = profileManager.activeProfile?.name else { return "?" }
-        let words = name.split(separator: " ")
-        if words.count >= 2 {
-            return String(words[0].prefix(1) + words[1].prefix(1)).uppercased()
-        } else if let first = words.first {
-            return String(first.prefix(2)).uppercased()
-        }
-        return "?"
+        return profileInitials(for: name)
     }
 }
 
@@ -442,20 +483,12 @@ struct SmartHeader: View {
         return profileManager.profiles.first { $0.id == id }
     }
 
-    private func profileInitials(for name: String) -> String {
-        let words = name.split(separator: " ")
-        if words.count >= 2 {
-            return String(words[0].prefix(1) + words[1].prefix(1)).uppercased()
-        } else if let first = words.first {
-            return String(first.prefix(2)).uppercased()
-        }
-        return "?"
-    }
-
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                ProfileSwitcherCompact(onManageProfiles: onManageProfiles)
+                if !(isMultiProfileMode && profileManager.multiProfileConfig.showAllProfilesInPopover) {
+                    ProfileSwitcherCompact(onManageProfiles: onManageProfiles)
+                }
 
                 // Status
                 Button(action: {
@@ -537,6 +570,124 @@ struct HeaderIconButton: View {
                 isHovered = hovering
             }
         }
+    }
+}
+
+// MARK: - Multi-Profile Dashboard
+
+struct MultiProfileDashboard: View {
+    let profiles: [Profile]
+    let activeProfileId: UUID?
+    let showRemainingPercentage: Bool
+    let showTimeMarker: Bool
+    let usePaceColoring: Bool
+    let timeDisplay: PopoverTimeDisplay
+
+    var body: some View {
+        if profiles.isEmpty {
+            Text("multiprofile.no_profiles_selected".localized)
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 12)
+        } else {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(Array(sortedProfiles(profiles, activeProfileId: activeProfileId).enumerated()), id: \.element.id) { index, profile in
+                        if index > 0 {
+                            PopoverDivider()
+                        }
+                        ProfileUsageCard(
+                            profile: profile,
+                            isActive: profile.id == activeProfileId,
+                            usage: profile.claudeUsage ?? .empty,
+                            showRemainingPercentage: showRemainingPercentage,
+                            showTimeMarker: showTimeMarker,
+                            usePaceColoring: usePaceColoring,
+                            timeDisplay: timeDisplay
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Profile Usage Card
+
+struct ProfileUsageCard: View {
+    let profile: Profile
+    let isActive: Bool
+    let usage: ClaudeUsage
+    let showRemainingPercentage: Bool
+    let showTimeMarker: Bool
+    let usePaceColoring: Bool
+    let timeDisplay: PopoverTimeDisplay
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ProfileHeaderRow(name: profile.name, isActive: isActive)
+
+            UsageRow(
+                title: "menubar.session_usage".localized,
+                subtitle: "menubar.5_hour_window".localized,
+                usedPercentage: usage.effectiveSessionPercentage,
+                showRemaining: showRemainingPercentage,
+                resetTime: usage.sessionResetTime,
+                periodDuration: Constants.sessionWindow,
+                showTimeMarker: showTimeMarker,
+                showPaceMarker: false,
+                usePaceColoring: usePaceColoring,
+                timeDisplay: timeDisplay
+            )
+
+            UsageRow(
+                title: "menubar.all_models".localized,
+                tag: "menubar.weekly".localized,
+                subtitle: nil,
+                usedPercentage: usage.weeklyPercentage,
+                showRemaining: showRemainingPercentage,
+                resetTime: usage.weeklyResetTime,
+                periodDuration: Constants.weeklyWindow,
+                showTimeMarker: showTimeMarker,
+                showPaceMarker: false,
+                usePaceColoring: usePaceColoring,
+                timeDisplay: timeDisplay
+            )
+
+            if usage.sonnetWeeklyTokensUsed > 0 {
+                UsageRow(
+                    title: "menubar.sonnet_usage".localized,
+                    subtitle: nil,
+                    usedPercentage: usage.sonnetWeeklyPercentage,
+                    showRemaining: showRemainingPercentage,
+                    resetTime: usage.sonnetWeeklyResetTime,
+                    periodDuration: nil,
+                    showTimeMarker: showTimeMarker,
+                    showPaceMarker: false,
+                    usePaceColoring: usePaceColoring,
+                    timeDisplay: timeDisplay
+                )
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .overlay(
+            HStack {
+                if isActive {
+                    RoundedRectangle(cornerRadius: 1.5)
+                        .fill(Color.accentColor)
+                        .frame(width: 3)
+                }
+                Spacer()
+            }
+        )
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.primary.opacity(isActive ? 0.06 : 0.03))
+        )
+        .padding(.horizontal, 10)
+        .padding(.top, 6)
     }
 }
 

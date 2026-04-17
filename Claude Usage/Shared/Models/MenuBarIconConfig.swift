@@ -293,6 +293,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
     var usePaceColoring: Bool // If true, color indicators based on projected usage pace
     var showRemainingPercentage: Bool // If true, show remaining capacity instead of used percentage
     var showActiveProfileIndicator: Bool // If true, show a green underline on the active profile's icon
+    var showAllProfilesInPopover: Bool
 
     init(
         iconStyle: MultiProfileIconStyle = .concentric,
@@ -303,7 +304,8 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         showPaceMarker: Bool = true,
         usePaceColoring: Bool = true,
         showRemainingPercentage: Bool = false,
-        showActiveProfileIndicator: Bool = false
+        showActiveProfileIndicator: Bool = false,
+        showAllProfilesInPopover: Bool = false
     ) {
         self.iconStyle = iconStyle
         self.showWeek = showWeek
@@ -314,6 +316,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         self.usePaceColoring = usePaceColoring
         self.showRemainingPercentage = showRemainingPercentage
         self.showActiveProfileIndicator = showActiveProfileIndicator
+        self.showAllProfilesInPopover = showAllProfilesInPopover
     }
 
     // MARK: - Codable (Custom decoder for backwards compatibility)
@@ -328,6 +331,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         case usePaceColoring
         case showRemainingPercentage
         case showActiveProfileIndicator
+        case showAllProfilesInPopover
     }
 
     init(from decoder: Decoder) throws {
@@ -343,6 +347,7 @@ struct MultiProfileDisplayConfig: Codable, Equatable {
         usePaceColoring = try container.decodeIfPresent(Bool.self, forKey: .usePaceColoring) ?? false
         showRemainingPercentage = try container.decodeIfPresent(Bool.self, forKey: .showRemainingPercentage) ?? false
         showActiveProfileIndicator = try container.decodeIfPresent(Bool.self, forKey: .showActiveProfileIndicator) ?? false
+        showAllProfilesInPopover = try container.decodeIfPresent(Bool.self, forKey: .showAllProfilesInPopover) ?? false
     }
 
     static var `default`: MultiProfileDisplayConfig {

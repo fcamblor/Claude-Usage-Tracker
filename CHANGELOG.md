@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Expanded Statusline**: Dedicated weekly and extra usage segments now rendered alongside session usage in the statusline
 - **Independent Weekly Display**: Show/hide weekly segment and separate weekly toggle options
 
+### Multi-Profile Popover
+
+- **Show All Profiles in Popover**: New toggle in Multi-Profile settings to display all selected profiles' usage stats stacked in the popover simultaneously, with the active profile listed first; Contextual Insights restricted to the active profile only in this mode
+
 ### Active Profile Indicator
 
 - **Green Underline Marker**: The currently active profile's icon in multi-profile menu bar mode now displays a green underline, making the live profile immediately identifiable

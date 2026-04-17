@@ -533,6 +533,9 @@
 "multiprofile.use_system_color_description" = "Utiliser la couleur d'accentuation du Mac au lieu des couleurs d'état";
 "multiprofile.active_indicator_title" = "Afficher l'indicateur de profil actif";
 "multiprofile.active_indicator_description" = "Affiche un petit soulignement vert sous l'icône du profil actuellement actif";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */

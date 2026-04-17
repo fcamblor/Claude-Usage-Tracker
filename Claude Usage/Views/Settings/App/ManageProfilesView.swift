@@ -254,6 +254,20 @@ struct ManageProfilesView: View {
                                 )
                             )
 
+                            SettingToggle(
+                                title: "multiprofile.show_all_in_popover_title".localized,
+                                description: "multiprofile.show_all_in_popover_description".localized,
+                                isOn: Binding(
+                                    get: { profileManager.multiProfileConfig.showAllProfilesInPopover },
+                                    set: { newValue in
+                                        var config = profileManager.multiProfileConfig
+                                        config.showAllProfilesInPopover = newValue
+                                        profileManager.updateMultiProfileConfig(config)
+                                        NotificationCenter.default.post(name: .multiProfileConfigChanged, object: nil)
+                                    }
+                                )
+                            )
+
                             // Info message
                             HStack(alignment: .top, spacing: 8) {
                                 Image(systemName: "info.circle.fill")

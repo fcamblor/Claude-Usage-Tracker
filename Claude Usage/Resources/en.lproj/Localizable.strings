@@ -537,6 +537,9 @@
 "multiprofile.use_system_color_description" = "Use white color instead of status colors (green/orange/red)";
 "multiprofile.active_indicator_title" = "Show Active Profile Indicator";
 "multiprofile.active_indicator_description" = "Show a small green underline under the icon of the currently active profile";
+"multiprofile.show_all_in_popover_title" = "Show All Profiles in Popover";
+"multiprofile.show_all_in_popover_description" = "Display usage stats for all selected profiles stacked in the popover instead of one at a time";
+"multiprofile.no_profiles_selected" = "No profiles selected for display";
 
 /* ==================== */
 /* MARK: - General Settings (Profile-Level) */
